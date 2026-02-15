@@ -1,4 +1,3 @@
-```
 # 🛡️ Codenames Monorepo
 
 Welcome to **Codenames**. This project is a high-performance, full-stack application built using a **Bun Monorepo** architecture. It leverages **Hono** for a type-safe API and **React** for a reactive frontend, all unified by a shared logic layer.
