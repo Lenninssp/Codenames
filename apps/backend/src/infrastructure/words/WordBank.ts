@@ -168,6 +168,7 @@ export class WordBank {
     for (let index = shuffledWords.length - 1; index > 0; index -= 1) {
       const randomIndex = Math.floor(Math.random() * (index + 1));
       const currentWord = shuffledWords[index];
+      if (!randomIndex || !currentWord) return [];
       shuffledWords[index] = shuffledWords[randomIndex] ?? currentWord;
       shuffledWords[randomIndex] = currentWord;
     }

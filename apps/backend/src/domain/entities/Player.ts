@@ -3,6 +3,7 @@ import { Team } from "../enums/Team.ts";
 
 export class Player {
   private username: string;
+  // definite assignment assertion
   private team!: Team;
   private role!: Role;
   private isHost: boolean;
