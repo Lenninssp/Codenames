@@ -36,7 +36,7 @@ type ClientMessageHandler = (
   message: ClientMessage,
 ) => boolean | Promise<boolean>;
 
-const host = Bun.env.HOST ?? "127.0.0.1";
+const host = "0.0.0.0";
 const port = Number.parseInt(Bun.env.PORT ?? "3000", 10);
 const websocketPath = Bun.env.WS_PATH ?? "/ws";
 const projectRoot = import.meta.dir;
