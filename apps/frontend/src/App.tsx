@@ -202,6 +202,24 @@ function App() {
     }
   };
 
+  const handleTerminateSession = (): void => {
+    if (!session || !isHost) {
+      return;
+    }
+
+    if (
+      typeof window !== "undefined" &&
+      !window.confirm("End this room for everyone? All players will be removed from the session.")
+    ) {
+      return;
+    }
+
+    sendAction("terminateSession", {
+      roomCode: session.roomCode,
+      hostUsername: username,
+    });
+  };
+
   const sendAction = (action: string, payload: Record<string, unknown>): void => {
     const socket = socketRef.current;
 
@@ -474,6 +492,15 @@ function App() {
             <span className="statusLabel">Identity</span>
             <strong>{username.trim() || "Unnamed agent"}</strong>
           </div>
+          {session && isHost && (
+            <button
+              className="dangerAction statusToggle"
+              onClick={handleTerminateSession}
+              disabled={socketState !== "connected"}
+            >
+              {isInLobby ? "Terminate Room" : "Terminate Session"}
+            </button>
+          )}
           {notices.length > 0 && (
             <button
               className="ghostAction statusToggle"
@@ -740,19 +767,6 @@ function App() {
                   disabled={!canGuess}
                 >
                   End Turn
-                </button>
-
-                <button
-                  className="dangerAction"
-                  onClick={() =>
-                    sendAction("terminateSession", {
-                      roomCode: session.roomCode,
-                      hostUsername: username,
-                    })
-                  }
-                  disabled={!isHost}
-                >
-                  Terminate Session
                 </button>
               </div>
             </div>
