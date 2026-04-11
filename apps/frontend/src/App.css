@@ -1,42 +1,670 @@
-#root {
-  max-width: 1280px;
+.appShell {
+  position: relative;
+  width: min(1320px, 100%);
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  display: grid;
+  gap: 0.85rem;
+  isolation: isolate;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.ambient {
+  position: fixed;
+  inset: auto;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 999px;
+  filter: blur(88px);
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: -1;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.ambient-left {
+  top: -8rem;
+  left: -10rem;
+  background:
+    radial-gradient(circle, rgba(255, 77, 137, 0.6) 0%, rgba(255, 77, 137, 0.16) 45%, transparent 72%);
+}
+
+.ambient-right {
+  top: 0;
+  right: -8rem;
+  background:
+    radial-gradient(circle, rgba(88, 116, 255, 0.6) 0%, rgba(88, 116, 255, 0.14) 44%, transparent 72%);
+}
+
+.panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: 1.2rem;
+  background: rgba(10, 18, 39, 0.92);
+  box-shadow:
+    0 18px 40px rgba(2, 7, 20, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 28%);
+  pointer-events: none;
+}
+
+.masthead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(20rem, 0.72fr);
+  gap: 0.9rem;
+  align-items: stretch;
+}
+
+.masthead-copy,
+.statusRail {
+  position: relative;
+  border-radius: 1.2rem;
+  background: rgba(10, 18, 39, 0.88);
+  backdrop-filter: blur(10px);
+}
+
+.masthead-copy {
+  padding: 0.8rem 1rem;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+}
+
+.kicker,
+.sectionHeading p,
+.statusLabel,
+label {
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.kicker,
+.sectionHeading p,
+.statusLabel {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1;
+  color: var(--ink-soft);
+}
+
+.sectionHeading h2,
+.sectionHeading h3 {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.topline {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.identityStrip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.identityChip {
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink-muted);
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.statusRail {
+  padding: 0.7rem;
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  transform: none;
+}
+
+.statusToggle {
+  justify-content: center;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.82rem;
+}
+
+.socketBadge {
+  justify-self: start;
+  border-radius: 999px;
+  padding: 0.38rem 0.72rem;
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.socket-connected {
+  color: #dffcff;
+  background: rgba(65, 204, 220, 0.18);
+}
+
+.socket-connecting {
+  color: #ffeab8;
+  background: rgba(189, 136, 25, 0.18);
+}
+
+.socket-disconnected {
+  color: #ffd8e4;
+  background: rgba(157, 35, 70, 0.18);
+}
+
+.statusCard {
+  position: relative;
+  padding: 0.6rem 0.72rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.statusCard strong {
+  font-family: "Inter", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.homeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.heroPanel,
+.lobbyPanel,
+.commandPanel,
+.boardPanel,
+.resultPanel,
+.noticesPanel {
+  padding: 1.15rem;
+}
+
+.heroPanel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.heroPanel::after {
+  content: none;
+}
+
+.sectionHeading {
+  display: grid;
+  gap: 0.45rem;
+  position: relative;
+  z-index: 1;
+}
+
+.sectionHeading h2 {
+  font-size: clamp(1.35rem, 2.3vw, 1.9rem);
+  text-wrap: balance;
+}
+
+.sectionHeading h3 {
+  font-size: clamp(0.96rem, 1.7vw, 1.18rem);
+}
+
+.sectionHeading.compact h2,
+.sectionHeading.compact h3 {
+  font-size: clamp(1.06rem, 2vw, 1.35rem);
+}
+
+.fieldCluster {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+label {
+  display: grid;
+  gap: 0.48rem;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+input,
+select {
+  border: 1px solid rgba(185, 199, 244, 0.14);
+  border-radius: 0.85rem;
+  padding: 0.76rem 0.88rem;
+  background: rgba(7, 14, 31, 0.9);
+  color: var(--ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+input::placeholder {
+  color: rgba(211, 222, 255, 0.42);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: rgba(114, 245, 255, 0.58);
+  box-shadow:
+    0 0 0 1px rgba(114, 245, 255, 0.28),
+    0 0 24px rgba(72, 237, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+.buttonStrip,
+.buttonStack,
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+button {
+  border: 0;
+  border-radius: 1rem;
+  padding: 0.74rem 0.92rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18);
+}
+
+button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.primaryAction {
+  color: #f7fbff;
+  background: var(--accent-blue-deep);
+  box-shadow: none;
+}
+
+.secondaryAction,
+.ghostAction {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 1px rgba(185, 199, 244, 0.12);
+}
+
+.launchAction {
+  color: #fff7f9;
+  background: var(--accent-red-deep);
+  box-shadow: none;
+}
+
+.dangerAction {
+  color: #fff2f6;
+  background: linear-gradient(135deg, rgba(113, 18, 44, 0.96), rgba(69, 8, 24, 0.98));
+}
+
+.lobbyTopline {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.readinessBadge {
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.readinessBadge.ready {
+  color: #04141d;
+  background: linear-gradient(135deg, var(--accent-cyan), #b5fbff);
+  box-shadow: 0 0 28px rgba(81, 241, 255, 0.24);
+}
+
+.readinessBadge.waiting {
+  color: #ffdca2;
+  background: linear-gradient(135deg, rgba(155, 112, 22, 0.74), rgba(85, 56, 8, 0.92));
+}
+
+.lobbyGrid {
+  margin-top: 0.9rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.92fr;
+  gap: 0.75rem;
+}
+
+.teamColumn,
+.lobbyControlPanel,
+.hintPanel,
+.controlCard,
+.statusBlock {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.teamColumn {
+  padding: 0.85rem;
+}
+
+.team-red {
+  box-shadow: inset 0 0 0 1px rgba(255, 83, 136, 0.12);
+}
+
+.team-blue {
+  box-shadow: inset 0 0 0 1px rgba(101, 126, 255, 0.12);
+}
+
+.teamHeader {
+  display: grid;
+  gap: 0.48rem;
+  margin-bottom: 0.9rem;
+}
+
+.teamHeader strong {
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.teamPill {
+  justify-self: start;
+  border-radius: 999px;
+  padding: 0.35rem 0.72rem;
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.team-red .teamPill {
+  color: #fff0f5;
+  background: linear-gradient(135deg, var(--accent-red), var(--accent-red-deep));
+}
+
+.team-blue .teamPill {
+  color: #eef2ff;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-deep));
+}
+
+.roster {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.roster li {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.72rem 0.8rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--ink-soft);
+}
+
+.roster strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.lobbyControlPanel {
+  padding: 0.9rem;
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  transform: none;
+}
+
+.gameLayout {
+  display: grid;
+  grid-template-columns: minmax(19rem, 0.82fr) minmax(0, 1.5fr);
+  gap: 0.85rem;
+}
+
+.commandPanel {
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+  transform: none;
+}
+
+.statusStack {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.statusBlock {
+  padding: 0.82rem 0.88rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.statusBlock strong {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.hintPanel,
+.controlCard {
+  padding: 0.9rem;
+}
+
+.hintMeta,
+.resultReason,
+.noticeItem {
+  color: var(--ink-muted);
+}
+
+.boardPanel {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.boardHeading h2 {
+  max-width: 18ch;
+  font-size: clamp(1.55rem, 2.7vw, 2.2rem);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.tile {
+  min-height: 6rem;
+  padding: 0.78rem;
+  border-radius: 0.9rem;
+  background: rgba(15, 27, 56, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+  color: var(--ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.tile:hover:not(:disabled) {
+  box-shadow: 0 0 0 1px rgba(79, 239, 255, 0.16);
+}
+
+.tileWord {
+  font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  font-size: 1.06rem;
+}
+
+.tileMeta {
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--ink-soft);
+}
+
+.identity-hidden {
+  background: rgba(15, 27, 56, 0.95);
+}
+
+.identity-red {
+  background: linear-gradient(180deg, rgba(255, 94, 142, 0.28), rgba(119, 18, 49, 0.94));
+}
+
+.identity-blue {
+  background: linear-gradient(180deg, rgba(99, 126, 255, 0.28), rgba(20, 44, 118, 0.96));
+}
+
+.identity-neutral {
+  background: linear-gradient(180deg, rgba(140, 158, 198, 0.18), rgba(45, 57, 88, 0.96));
+}
+
+.identity-killer {
+  background: linear-gradient(180deg, rgba(18, 23, 37, 0.98), rgba(6, 9, 16, 1));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  color: #f4f6fa;
+}
+
+.identity-killer .tileMeta {
+  color: rgba(241, 245, 255, 0.72);
+}
+
+.is-revealed.identity-red,
+.is-revealed.identity-blue,
+.is-revealed.identity-neutral,
+.is-revealed.identity-killer {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.resultPanel {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.resultPanel h2 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.noticesPanel {
+  display: grid;
+  gap: 0.6rem;
+  position: fixed;
+  top: 5rem;
+  right: 1rem;
+  width: min(15rem, calc(100vw - 2rem));
+  max-height: min(14rem, calc(100vh - 6rem));
+  overflow: auto;
+  z-index: 20;
+  border-radius: 1rem;
+  background: rgba(9, 16, 34, 0.82);
+  box-shadow: 0 14px 30px rgba(2, 7, 20, 0.14);
+}
+
+.noticeList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.noticeItem {
+  padding: 0.62rem 0.72rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.025);
+  font-size: 0.78rem;
+}
+
+.notice-info {
+  box-shadow: inset 0 0 0 1px rgba(93, 129, 255, 0.16);
+}
+
+.notice-success {
+  box-shadow: inset 0 0 0 1px rgba(85, 244, 255, 0.18);
+  color: color-mix(in oklab, white 88%, var(--accent-cyan) 12%);
+}
+
+.notice-warning {
+  box-shadow: inset 0 0 0 1px rgba(255, 181, 65, 0.22);
+  color: color-mix(in oklab, white 84%, #ffc466 16%);
+}
+
+@media (max-width: 1080px) {
+  .masthead,
+  .heroPanel,
+  .gameLayout,
+  .lobbyGrid {
+    grid-template-columns: 1fr;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+@media (max-width: 760px) {
+  .appShell {
+    gap: 1rem;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .topline {
+    align-items: flex-start;
+    flex-direction: column;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-.read-the-docs {
-  color: #888;
+  .lobbyTopline,
+  .statusRail {
+    align-items: flex-start;
+  }
+
+  .noticesPanel {
+    top: auto;
+    right: 1rem;
+    bottom: 1rem;
+    width: calc(100vw - 2rem);
+    max-height: min(15rem, 45vh);
+  }
 }

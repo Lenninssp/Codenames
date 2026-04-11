@@ -1,9 +1,12 @@
 {
   "name": "codenames",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": ["apps/*"],
   "scripts": {
-    "dev": "bun --filter \"*\" dev",
-    "build": "bun --filter \"*\" build"
+    "dev": "bun run server.ts",
+    "start": "bun run server.ts",
+    "build": "bun run --cwd apps/backend build && bun run --cwd apps/frontend build",
+    "build:frontend": "bun run --cwd apps/frontend build",
+    "build:backend": "bun run --cwd apps/backend build"
   }
 }

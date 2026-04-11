@@ -1,19 +1,10 @@
 import { Card } from "./Card.ts";
-import { Identity } from "../enums/Identity.ts";
-
-type CardState = {
-  word: string;
-  identity: Identity;
-  isRevealed: boolean;
-};
-
-const readCardState = (card: Card): CardState => card as unknown as CardState;
 
 export class Grid {
   private cards: Card[];
 
-  public constructor() {
-    this.cards = [];
+  public constructor(cards: Card[] = []) {
+    this.cards = [...cards];
   }
 
   public addCard(card: Card): void {
@@ -24,13 +15,12 @@ export class Grid {
     this.cards.push(card);
   }
 
-  public checkUnrevealedCards(hintWord: string): boolean {
-    const normalizedHintWord = hintWord.trim().toLowerCase();
+  public getUnrevealedCards(): Card[] {
+    return this.cards.filter((card) => !card.getIsRevealed());
+  }
 
-    return this.cards.every((card) => {
-      const { word, isRevealed } = readCardState(card);
-      return isRevealed || word.trim().toLowerCase() !== normalizedHintWord;
-    });
+  public getCards(): Card[] {
+    return [...this.cards];
   }
 
   public revealCard(cardIndex: number): Card {
@@ -40,13 +30,7 @@ export class Grid {
       throw new Error("The selected card index is invalid.");
     }
 
-    const cardState = readCardState(card);
-
-    if (cardState.isRevealed) {
-      throw new Error("The selected card has already been revealed.");
-    }
-
-    cardState.isRevealed = true;
+    card.reveal();
     return card;
   }
 }

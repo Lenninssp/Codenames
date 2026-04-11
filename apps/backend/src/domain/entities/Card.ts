@@ -10,4 +10,24 @@ export class Card {
     this.identity = identity;
     this.isRevealed = false;
   }
+
+  public getWord(): string {
+    return this.word;
+  }
+
+  public getIdentity(): Identity {
+    return this.identity;
+  }
+
+  public getIsRevealed(): boolean {
+    return this.isRevealed;
+  }
+
+  public reveal(): void {
+    if (this.isRevealed) {
+      throw new Error("The selected card has already been revealed.");
+    }
+
+    this.isRevealed = true;
+  }
 }

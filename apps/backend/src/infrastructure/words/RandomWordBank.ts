@@ -1,3 +1,5 @@
+import type { WordProvider } from "./WordProvider.ts";
+
 const WORDS = [
   "AGENT",
   "AIR",
@@ -157,10 +159,14 @@ const WORDS = [
   "YARD",
 ];
 
-export class WordBank {
+export class RandomWordBank implements WordProvider {
   public fetchRandomWords(count: number): string[] {
     if (count > WORDS.length) {
       throw new Error("The requested number of words exceeds the word bank.");
+    }
+
+    if (count < 0) {
+      throw new Error("The requested number of words cannot be negative.");
     }
 
     const shuffledWords = [...WORDS];
@@ -168,8 +174,13 @@ export class WordBank {
     for (let index = shuffledWords.length - 1; index > 0; index -= 1) {
       const randomIndex = Math.floor(Math.random() * (index + 1));
       const currentWord = shuffledWords[index];
-      if (!randomIndex || !currentWord) return [];
-      shuffledWords[index] = shuffledWords[randomIndex] ?? currentWord;
+      const randomWord = shuffledWords[randomIndex];
+
+      if (!currentWord || !randomWord) {
+        throw new Error("Unable to randomize words.");
+      }
+
+      shuffledWords[index] = randomWord;
       shuffledWords[randomIndex] = currentWord;
     }
 

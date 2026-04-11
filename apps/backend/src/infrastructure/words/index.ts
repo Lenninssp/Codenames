@@ -1,1 +1,2 @@
-export * from "./WordBank.ts";
+export * from "./RandomWordBank.ts";
+export * from "./WordProvider.ts";

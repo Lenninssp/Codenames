@@ -3,8 +3,19 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "node --loader ts-node/esm --no-warnings src/server.ts",
+    "start": "node --loader ts-node/esm --no-warnings src/server.ts",
+    "build": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/ws": "^8.18.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "typescript": "^5"

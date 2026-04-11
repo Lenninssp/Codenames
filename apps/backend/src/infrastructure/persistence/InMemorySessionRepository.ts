@@ -1,6 +1,7 @@
 import { Session } from "../../domain/entities/Session.ts";
+import type { SessionRepository } from "./SessionRepository.ts";
 
-export class SessionMemoryMap {
+export class InMemorySessionRepository implements SessionRepository {
   private sessionsByCode: Map<string, Session>;
 
   public constructor() {

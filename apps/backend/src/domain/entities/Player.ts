@@ -3,21 +3,35 @@ import { Team } from "../enums/Team.ts";
 
 export class Player {
   private username: string;
-  // definite assignment assertion
-  private team!: Team;
-  private role!: Role;
+  private team: Team;
+  private role: Role;
   private isHost: boolean;
 
   public constructor(username: string, isHost: boolean) {
     this.username = username;
+    this.team = Team.NONE;
+    this.role = Role.OPERATOR;
     this.isHost = isHost;
   }
 
-  public setTeam(team: Team): void {
+  public assignRole(team: Team, role: Role): void {
     this.team = team;
+    this.role = role;
   }
 
-  public setRole(role: Role): void {
-    this.role = role;
+  public getUsername(): string {
+    return this.username;
+  }
+
+  public getTeam(): Team {
+    return this.team;
+  }
+
+  public getRole(): Role {
+    return this.role;
+  }
+
+  public getIsHost(): boolean {
+    return this.isHost;
   }
 }

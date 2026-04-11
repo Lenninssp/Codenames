@@ -1,12 +1,8 @@
+import { Card } from "./Card.ts";
 import { Guess } from "./Guess.ts";
 import { Hint } from "./Hint.ts";
-import { Identity } from "../enums/Identity.ts";
 import { Team } from "../enums/Team.ts";
 import { TurnPhase } from "../enums/TurnPhase.ts";
-
-const matchesTeam = (team: Team, identity: Identity): boolean =>
-  (team === Team.RED && identity === Identity.RED) ||
-  (team === Team.BLUE && identity === Identity.BLUE);
 
 export class Turn {
   private turnNumber: number;
@@ -20,34 +16,32 @@ export class Turn {
   public constructor(turnNumber: number, team: Team) {
     this.turnNumber = turnNumber;
     this.team = team;
-    this.phase = TurnPhase.SPYMASTER_HINTING;
+    this.phase = TurnPhase.HINT;
     this.remainingGuesses = 0;
     this.isComplete = false;
     this.hint = null;
     this.guesses = [];
   }
 
-  public createHint(word: string, count: number): Hint {
+  public submitHint(word: string, count: number): Hint {
+    const sanitizedWord = word.trim();
+
+    if (sanitizedWord.length === 0) {
+      throw new Error("The hint cannot be empty.");
+    }
+
     if (count < 0) {
       throw new Error("The hint count cannot be negative.");
     }
 
-    this.hint = new Hint(word, count);
+    this.hint = new Hint(sanitizedWord, count);
     this.remainingGuesses = count + 1;
-    this.phase = TurnPhase.OPERATOR_GUESSING;
+    this.phase = TurnPhase.GUESS;
     return this.hint;
   }
 
-  public setPhase(phase: TurnPhase): void {
-    this.phase = phase;
-  }
-
-  public setRemainingGuesses(count: number): void {
-    this.remainingGuesses = count;
-  }
-
-  public recordGuess(cardIndex: number, isCorrect: boolean): Guess {
-    const guess = new Guess(cardIndex, isCorrect);
+  public recordGuess(card: Card): Guess {
+    const guess = new Guess(card.getWord(), card.getIdentity());
     this.guesses.push(guess);
     return guess;
   }
@@ -58,14 +52,36 @@ export class Turn {
     }
   }
 
-  public markCompleteIfNeeded(identity: Identity): void {
-    if (!matchesTeam(this.team, identity) || this.remainingGuesses <= 0) {
-      this.markComplete();
-    }
-  }
-
-  public markComplete(): void {
+  public complete(): void {
     this.isComplete = true;
     this.phase = TurnPhase.COMPLETE;
+  }
+
+  public getTurnNumber(): number {
+    return this.turnNumber;
+  }
+
+  public getTeam(): Team {
+    return this.team;
+  }
+
+  public getPhase(): TurnPhase {
+    return this.phase;
+  }
+
+  public getRemainingGuesses(): number {
+    return this.remainingGuesses;
+  }
+
+  public getIsComplete(): boolean {
+    return this.isComplete;
+  }
+
+  public getHint(): Hint | null {
+    return this.hint;
+  }
+
+  public getGuesses(): Guess[] {
+    return [...this.guesses];
   }
 }

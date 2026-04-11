@@ -1,4 +1,3 @@
-import { Card } from "./Card.ts";
 import { Grid } from "./Grid.ts";
 import { Notification } from "./Notification.ts";
 import { Turn } from "./Turn.ts";
@@ -6,43 +5,8 @@ import { GameStatus } from "../enums/GameStatus.ts";
 import { Identity } from "../enums/Identity.ts";
 import { Team } from "../enums/Team.ts";
 
-type CardState = {
-  identity: Identity;
-  isRevealed: boolean;
-};
-
-type GridState = {
-  cards: Card[];
-};
-
-const readCardState = (card: Card): CardState => card as unknown as CardState;
-
-const readGridState = (grid: Grid): GridState => grid as unknown as GridState;
-
-const oppositeTeam = (team: Team): Team => (team === Team.RED ? Team.BLUE : Team.RED);
-
-const countRemainingCards = (grid: Grid): { red: number; blue: number } => {
-  const { cards } = readGridState(grid);
-
-  return cards.reduce(
-    (totals, card) => {
-      const { identity, isRevealed } = readCardState(card);
-
-      if (isRevealed) {
-        return totals;
-      }
-
-      if (identity === Identity.RED) {
-        totals.red += 1;
-      } else if (identity === Identity.BLUE) {
-        totals.blue += 1;
-      }
-
-      return totals;
-    },
-    { red: 0, blue: 0 },
-  );
-};
+const oppositeTeam = (team: Team): Team =>
+  team === Team.RED ? Team.BLUE : Team.RED;
 
 export class Game {
   private activeTeam: Team;
@@ -52,25 +16,98 @@ export class Game {
   private grid: Grid;
   private turns: Turn[];
 
-  public constructor() {
-    this.activeTeam = Team.RED;
+  public constructor(grid: Grid, startingTeam: Team) {
+    this.activeTeam = startingTeam;
     this.status = GameStatus.ACTIVE;
     this.winner = null;
     this.victoryReason = null;
-    this.grid = new Grid();
+    this.grid = grid;
     this.turns = [];
   }
 
-  public setGrid(grid: Grid): void {
-    this.grid = grid;
+  public start(): void {
+    this.status = GameStatus.ACTIVE;
+    this.startTurn();
   }
 
-  public setActiveTeam(team: Team): void {
-    this.activeTeam = team;
+  public startTurn(): Turn {
+    const turn = new Turn(this.turns.length + 1, this.activeTeam);
+    this.turns.push(turn);
+    return turn;
   }
 
-  public setStatus(status: GameStatus): void {
-    this.status = status;
+  public switchActiveTeam(): void {
+    this.activeTeam = oppositeTeam(this.activeTeam);
+  }
+
+  public applyRevealResult(identity: Identity): Notification | null {
+    if (this.status === GameStatus.FINISHED) {
+      return this.getResult();
+    }
+
+    if (identity === Identity.KILLER) {
+      this.finish(
+        oppositeTeam(this.activeTeam),
+        `${this.activeTeam} revealed the KILLER card.`,
+      );
+      return this.getResult();
+    }
+
+    const unrevealedCards = this.grid.getUnrevealedCards();
+    const redCardsRemaining = unrevealedCards.filter(
+      (card) => card.getIdentity() === Identity.RED,
+    ).length;
+    const blueCardsRemaining = unrevealedCards.filter(
+      (card) => card.getIdentity() === Identity.BLUE,
+    ).length;
+
+    if (redCardsRemaining === 0) {
+      this.finish(Team.RED, "RED revealed all of its cards.");
+      return this.getResult();
+    }
+
+    if (blueCardsRemaining === 0) {
+      this.finish(Team.BLUE, "BLUE revealed all of its cards.");
+      return this.getResult();
+    }
+
+    return null;
+  }
+
+  public finish(winner: Team, reason: string): void {
+    this.winner = winner;
+    this.victoryReason = reason;
+    this.status = GameStatus.FINISHED;
+  }
+
+  public getCurrentTurn(): Turn {
+    const currentTurn = this.turns[this.turns.length - 1];
+
+    if (!currentTurn) {
+      throw new Error("The game has no active turn.");
+    }
+
+    return currentTurn;
+  }
+
+  public getGrid(): Grid {
+    return this.grid;
+  }
+
+  public getTurns(): Turn[] {
+    return [...this.turns];
+  }
+
+  public getActiveTeam(): Team {
+    return this.activeTeam;
+  }
+
+  public getStatus(): GameStatus {
+    return this.status;
+  }
+
+  public getWinner(): Team | null {
+    return this.winner;
   }
 
   public getResult(): Notification {
@@ -79,43 +116,5 @@ export class Game {
     }
 
     return new Notification(this.winner, this.victoryReason);
-  }
-
-  public toggleActiveTeam(): void {
-    this.activeTeam = oppositeTeam(this.activeTeam);
-  }
-
-  public createTurn(): Turn {
-    const turn = new Turn(this.turns.length + 1, this.activeTeam);
-    this.turns.push(turn);
-    return turn;
-  }
-
-  public evaluateGameState(identity: Identity): void {
-    if (this.status === GameStatus.FINISHED) {
-      return;
-    }
-
-    if (identity === Identity.KILLER) {
-      this.winner = oppositeTeam(this.activeTeam);
-      this.victoryReason = `${this.activeTeam} revealed the KILLER card.`;
-      this.status = GameStatus.FINISHED;
-      return;
-    }
-
-    const remainingCards = countRemainingCards(this.grid);
-
-    if (remainingCards.red === 0) {
-      this.winner = Team.RED;
-      this.victoryReason = "RED revealed all of its cards.";
-      this.status = GameStatus.FINISHED;
-      return;
-    }
-
-    if (remainingCards.blue === 0) {
-      this.winner = Team.BLUE;
-      this.victoryReason = "BLUE revealed all of its cards.";
-      this.status = GameStatus.FINISHED;
-    }
   }
 }

@@ -6,4 +6,12 @@ export class Hint {
     this.word = word;
     this.count = count;
   }
+
+  public getWord(): string {
+    return this.word;
+  }
+
+  public getCount(): number {
+    return this.count;
+  }
 }

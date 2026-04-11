@@ -1,68 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@500;700&display=swap");
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  --bg: #060e20;
+  --surface: oklch(0.18 0.03 258);
+  --surface-bright: oklch(0.24 0.04 258);
+  --surface-container-low: color-mix(in oklab, var(--surface) 78%, #122245 22%);
+  --surface-container: color-mix(in oklab, var(--surface) 68%, #172c59 32%);
+  --surface-container-high: color-mix(in oklab, var(--surface) 58%, #1c366f 42%);
+  --surface-container-highest: color-mix(in oklab, var(--surface) 48%, #23458e 52%);
+  --panel: color-mix(in oklab, var(--surface-container) 72%, transparent);
+  --panel-border: color-mix(in oklab, #b9c7f4 15%, transparent);
+  --ink: oklch(0.95 0.01 255);
+  --ink-muted: oklch(0.8 0.02 254);
+  --ink-soft: oklch(0.72 0.03 250);
+  --accent-red: oklch(0.62 0.2 18);
+  --accent-red-deep: oklch(0.46 0.19 13);
+  --accent-blue: oklch(0.62 0.17 262);
+  --accent-blue-deep: oklch(0.47 0.14 266);
+  --accent-cyan: oklch(0.82 0.16 213);
+  --accent-cyan-glow: rgba(60, 241, 255, 0.32);
+  --shadow-ambient: rgba(3, 8, 18, 0.38);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  line-height: 1.45;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color: var(--ink);
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+* {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+html {
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(255, 65, 123, 0.22), transparent 26%),
+    radial-gradient(circle at 86% 8%, rgba(88, 116, 255, 0.24), transparent 24%),
+    radial-gradient(circle at 55% 100%, rgba(53, 214, 255, 0.12), transparent 34%),
+    linear-gradient(180deg, #071126 0%, #060e20 52%, #091328 100%);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }

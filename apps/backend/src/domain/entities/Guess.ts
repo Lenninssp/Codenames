@@ -1,9 +1,19 @@
-export class Guess {
-  private cardIndex: number;
-  private isCorrect: boolean;
+import { Identity } from "../enums/Identity.ts";
 
-  public constructor(cardIndex: number, isCorrect: boolean) {
-    this.cardIndex = cardIndex;
-    this.isCorrect = isCorrect;
+export class Guess {
+  private selectedWord: string;
+  private revealedIdentity: Identity;
+
+  public constructor(selectedWord: string, revealedIdentity: Identity) {
+    this.selectedWord = selectedWord;
+    this.revealedIdentity = revealedIdentity;
+  }
+
+  public getSelectedWord(): string {
+    return this.selectedWord;
+  }
+
+  public getRevealedIdentity(): Identity {
+    return this.revealedIdentity;
   }
 }

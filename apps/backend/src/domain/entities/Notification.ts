@@ -2,10 +2,18 @@ import { Team } from "../enums/Team.ts";
 
 export class Notification {
   private winner: Team;
-  private victoryReason: string;
+  private reason: string;
 
-  public constructor(winner: Team, victoryReason: string) {
+  public constructor(winner: Team, reason: string) {
     this.winner = winner;
-    this.victoryReason = victoryReason;
+    this.reason = reason;
+  }
+
+  public getWinner(): Team {
+    return this.winner;
+  }
+
+  public getReason(): string {
+    return this.reason;
   }
 }

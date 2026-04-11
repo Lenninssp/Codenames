@@ -4,16 +4,6 @@ import { Role } from "../enums/Role.ts";
 import { SessionStatus } from "../enums/SessionStatus.ts";
 import { Team } from "../enums/Team.ts";
 
-type PlayerState = {
-  username: string;
-  team?: Team;
-  role?: Role;
-  isHost: boolean;
-};
-
-const readPlayerState = (player: Player): PlayerState =>
-  player as unknown as PlayerState;
-
 export class Session {
   private roomCode: string;
   private status: SessionStatus;
@@ -28,7 +18,7 @@ export class Session {
   }
 
   public addPlayer(player: Player): void {
-    const { username } = readPlayerState(player);
+    const username = player.getUsername();
 
     if (!this.checkUsernameUnique(username)) {
       throw new Error("The username is already in use in this session.");
@@ -46,8 +36,9 @@ export class Session {
   }
 
   public getPlayer(username: string): Player {
+    const normalizedUsername = username.trim().toLowerCase();
     const player = this.players.find(
-      (candidate) => readPlayerState(candidate).username === username,
+      (candidate) => candidate.getUsername().trim().toLowerCase() === normalizedUsername,
     );
 
     if (!player) {
@@ -59,14 +50,16 @@ export class Session {
 
   public isSpymasterSlotAvailable(team: Team): boolean {
     return !this.players.some((player) => {
-      const { team: assignedTeam, role } = readPlayerState(player);
+      const assignedTeam = player.getTeam();
+      const role = player.getRole();
       return assignedTeam === team && role === Role.SPYMASTER;
     });
   }
 
   public checkUsernameUnique(username: string): boolean {
+    const normalizedUsername = username.trim().toLowerCase();
     return !this.players.some(
-      (player) => readPlayerState(player).username === username,
+      (player) => player.getUsername().trim().toLowerCase() === normalizedUsername,
     );
   }
 
@@ -81,9 +74,10 @@ export class Session {
     ]);
 
     for (const player of this.players) {
-      const { team, role } = readPlayerState(player);
+      const team = player.getTeam();
+      const role = player.getRole();
 
-      if (!team || !role) {
+      if (team === Team.NONE) {
         return false;
       }
 
@@ -106,7 +100,7 @@ export class Session {
   }
 
   public getHost(): Player {
-    const host = this.players.find((player) => readPlayerState(player).isHost);
+    const host = this.players.find((player) => player.getIsHost());
 
     if (!host) {
       throw new Error("The session does not have a host.");
@@ -121,5 +115,17 @@ export class Session {
 
   public setStatus(status: SessionStatus): void {
     this.status = status;
+  }
+
+  public getRoomCode(): string {
+    return this.roomCode;
+  }
+
+  public getStatus(): SessionStatus {
+    return this.status;
+  }
+
+  public getPlayers(): Player[] {
+    return [...this.players];
   }
 }
