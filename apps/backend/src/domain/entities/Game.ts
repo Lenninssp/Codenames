@@ -1,5 +1,5 @@
 import { Grid } from "./Grid.ts";
-import { Notification } from "./Notification.ts";
+import { GameResult } from "./GameResult.ts";
 import { Turn } from "./Turn.ts";
 import { GameStatus } from "../enums/GameStatus.ts";
 import { Identity } from "../enums/Identity.ts";
@@ -40,7 +40,7 @@ export class Game {
     this.activeTeam = oppositeTeam(this.activeTeam);
   }
 
-  public applyRevealResult(identity: Identity): Notification | null {
+  public applyRevealResult(identity: Identity): GameResult | null {
     if (this.status === GameStatus.FINISHED) {
       return this.getResult();
     }
@@ -110,11 +110,11 @@ export class Game {
     return this.winner;
   }
 
-  public getResult(): Notification {
+  public getResult(): GameResult {
     if (this.winner === null || this.victoryReason === null) {
       throw new Error("The game has not produced a result yet.");
     }
 
-    return new Notification(this.winner, this.victoryReason);
+    return new GameResult(this.winner, this.victoryReason);
   }
 }

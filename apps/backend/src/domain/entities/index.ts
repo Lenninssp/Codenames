@@ -3,7 +3,7 @@ export * from "./Game.ts";
 export * from "./Grid.ts";
 export * from "./Guess.ts";
 export * from "./Hint.ts";
-export * from "./Notification.ts";
+export * from "./GameResult.ts";
 export * from "./Player.ts";
 export * from "./Session.ts";
 export * from "./Turn.ts";

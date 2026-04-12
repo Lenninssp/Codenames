@@ -1,6 +1,6 @@
 import { Team } from "../enums/Team.ts";
 
-export class Notification {
+export class GameResult {
   private winner: Team;
   private reason: string;
 
