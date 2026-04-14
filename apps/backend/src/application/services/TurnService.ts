@@ -50,7 +50,7 @@ export class TurnService {
     this.assertRoleForActiveTeam(session, username, activeTeam, Role.SPYMASTER);
 
     if (!this.hintValidator.validate(game.getGrid(), sanitizedHintWord)) {
-      throw new Error("The hint matches an unrevealed card.");
+      throw new Error("The hint matches or closely resembles a card on the grid.");
     }
 
     turn.submitHint(sanitizedHintWord, hintCount);

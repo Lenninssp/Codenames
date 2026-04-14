@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
+import { getCardMetaLabel, getVisibleIdentity, shouldShowHintPanel } from "./gameView.ts";
 
 type Team = "NONE" | "RED" | "BLUE";
 type Role = "SPYMASTER" | "OPERATOR";
@@ -151,6 +152,7 @@ function App() {
   const currentTurn = session?.game?.turns.at(-1) ?? null;
   const turnPhase = currentTurn?.phase ?? "HINT";
   const canSeeIdentities = currentPlayer?.role === "SPYMASTER";
+  const showHintPanel = shouldShowHintPanel(currentPlayer?.role);
   const isCurrentTeamTurn =
     !!session?.game &&
     currentPlayer !== null &&
@@ -709,17 +711,19 @@ function App() {
               </div>
             </div>
 
-            <div className="hintPanel">
-              <div className="sectionHeading compact">
-                <p>Latest clue</p>
-                <h3>{lastHint ? lastHint.hintWord : "Waiting for a hint"}</h3>
+            {showHintPanel && (
+              <div className="hintPanel">
+                <div className="sectionHeading compact">
+                  <p>Latest clue</p>
+                  <h3>{lastHint ? lastHint.hintWord : "Waiting for a hint"}</h3>
+                </div>
+                <p className="hintMeta">
+                  {lastHint
+                    ? `${lastHint.by} linked ${lastHint.hintCount} word${lastHint.hintCount === 1 ? "" : "s"}`
+                    : "The active Spymaster must submit a one-word clue and a count."}
+                </p>
               </div>
-              <p className="hintMeta">
-                {lastHint
-                  ? `${lastHint.by} linked ${lastHint.hintCount} word${lastHint.hintCount === 1 ? "" : "s"}`
-                  : "The active Spymaster must submit a one-word clue and a count."}
-              </p>
-            </div>
+            )}
 
             <div className="controlCard">
               <div className="sectionHeading compact">
@@ -780,8 +784,10 @@ function App() {
 
             <div className="board">
               {session.game.grid.cards.map((card, index) => {
-                const visibleIdentity = card.isRevealed || canSeeIdentities;
-                const identityLabel = visibleIdentity ? card.identity : "";
+                const visibleIdentity = getVisibleIdentity({
+                  role: currentPlayer?.role,
+                  card,
+                });
                 const cardClass = [
                   "tile",
                   card.isRevealed ? "is-revealed" : "",
@@ -804,7 +810,12 @@ function App() {
                     disabled={!canGuess || card.isRevealed}
                   >
                     <span className="tileWord">{card.word}</span>
-                    <span className="tileMeta">{identityLabel || "Hidden identity"}</span>
+                    <span className="tileMeta">
+                      {getCardMetaLabel({
+                        role: currentPlayer?.role,
+                        card,
+                      })}
+                    </span>
                   </button>
                 );
               })}
